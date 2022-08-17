@@ -225,24 +225,24 @@ int min_idxH(int **energy, int H)
 
 void calc_path(int **path,int **energy, int H, int W)
 {
-    for (int i = H - 1; i >= 0; i--)
+    for (int j = W - 1; j >= 0; j--)
     {
 
-        for (int j = 0; j < W; ++j)
+        for (int i = 0; i < H; ++i)
         {
-            if (i != H - 1)
+            if (j != W - 1)
             {
-                if (j == 0)
+                if (i == 0)
                 {
-                    path[i][j] = energy[i][j] + min(path[i + 1][j], path[i + 1][j + 1]);
+                    path[i][j] = energy[i][j] + min(path[i][j+1], path[i + 1][j + 1]);
                 }
-                else if (j != W - 1)
+                else if (i != H - 1)
                 {
-                    path[i][j] = energy[i][j] + min(path[i + 1][j], path[i + 1][j + 1], path[i + 1][j - 1]);
+                    path[i][j] = energy[i][j] + min(path[i + 1][j+1], path[i][j + 1], path[i - 1][j + 1]);
                 }
                 else
                 {
-                    path[i][j] = energy[i][j] + min(path[i + 1][j], path[i + 1][j - 1]);
+                    path[i][j] = energy[i][j] + min(path[i][j+1], path[i - 1][j + 1]);
                 }
             }
             else
