@@ -119,7 +119,7 @@ int min2(int **path, int H, int i, int j)
     int min_idx;
     if (i == 0)
     {
-        if (path[i][j] > path[i+1][j])
+        if (path[i][j] > path[i + 1][j])
             min_idx = i + 1;
         else
             min_idx = i;
@@ -127,14 +127,14 @@ int min2(int **path, int H, int i, int j)
     else if (i != H - 1)
     {
         min_idx = i;
-        if (path[min_idx][j] > path[i-1][j])
+        if (path[min_idx][j] > path[i - 1][j])
             min_idx = i - 1;
-        if (path[min_idx][j] > path[i+1][j])
+        if (path[min_idx][j] > path[i + 1][j])
             min_idx = i + 1;
     }
     else
     {
-        if (path[i][j] > path[i-1][j])
+        if (path[i][j] > path[i - 1][j])
             min_idx = i - 1;
         else
             min_idx = i;
@@ -223,7 +223,7 @@ int min_idxH(int **energy, int H)
     return min_idx;
 }
 
-void calc_path(int **path,int **energy, int H, int W)
+void calc_path(int **path, int **energy, int H, int W)
 {
     for (int j = W - 1; j >= 0; j--)
     {
@@ -234,15 +234,44 @@ void calc_path(int **path,int **energy, int H, int W)
             {
                 if (i == 0)
                 {
-                    path[i][j] = energy[i][j] + min(path[i][j+1], path[i + 1][j + 1]);
+                    path[i][j] = energy[i][j] + min(path[i][j + 1], path[i + 1][j + 1]);
                 }
                 else if (i != H - 1)
                 {
-                    path[i][j] = energy[i][j] + min(path[i + 1][j+1], path[i][j + 1], path[i - 1][j + 1]);
+                    path[i][j] = energy[i][j] + min(path[i + 1][j + 1], path[i][j + 1], path[i - 1][j + 1]);
                 }
                 else
                 {
-                    path[i][j] = energy[i][j] + min(path[i][j+1], path[i - 1][j + 1]);
+                    path[i][j] = energy[i][j] + min(path[i][j + 1], path[i - 1][j + 1]);
+                }
+            }
+            else
+            {
+                path[i][j] = energy[i][j];
+            }
+        }
+    }
+}
+void calc_path1(int **path, int **energy, int H, int W)
+{
+    for (int i = H - 1; i >= 0; i--)
+    {
+
+        for (int j = 0; j < W; ++j)
+        {
+            if (i != H - 1)
+            {
+                if (j == 0)
+                {
+                    path[i][j] = energy[i][j] + min(path[i + 1][j], path[i + 1][j + 1]);
+                }
+                else if (j != W - 1)
+                {
+                    path[i][j] = energy[i][j] + min(path[i + 1][j], path[i + 1][j + 1], path[i + 1][j - 1]);
+                }
+                else
+                {
+                    path[i][j] = energy[i][j] + min(path[i + 1][j], path[i + 1][j - 1]);
                 }
             }
             else
@@ -253,7 +282,7 @@ void calc_path(int **path,int **energy, int H, int W)
     }
 }
 
-void reduce_W(int **energy,int **path, int ***rgb, int H, int W, int W_, int C)
+void reduce_W(int **energy, int **path, int ***rgb, int H, int W, int W_, int C)
 {
     if (W == W_)
         return;
@@ -286,63 +315,56 @@ void reduce_W(int **energy,int **path, int ***rgb, int H, int W, int W_, int C)
             }
         }
     }
-    calc_energy(rgb, energy, H, W-1, C);
-    calc_path(path, energy, H, W-1);
+    calc_energy(rgb, energy, H, W - 1, C);
+    calc_path1(path, energy, H, W - 1);
     reduce_W(energy, path, rgb, H, W - 1, W_, C);
 }
 
-
-void reduce_H(int **energy,int **path,int ***rgb, int H, int W_,int  H_ ,int C)
+void reduce_H(int **energy, int **path, int ***rgb, int H, int W_, int H_, int C)
 {
     if (H == H_)
         return;
 
     int j = min_idxH(path, H);
-    
+
     for (int k = 0; k < W_; k++)
     {
-        
+
         if (k == 0)
         {
-             
+
             for (int i = j; i < H - 1; i++)
             {
-                path[i][k] = path[i+1][k];
+                path[i][k] = path[i + 1][k];
                 for (int l = 0; l < C; l++)
                 {
-                    rgb[i][k][l] = rgb[i+1][k][l];
+                    rgb[i][k][l] = rgb[i + 1][k][l];
                 }
             }
         }
         else
         {
-             
+
             j = min2(path, H, j, k);
-           
+
             for (int i = j; i < H - 1; i++)
             {
-                path[i][k] = path[i+1][k];
-                 
+                path[i][k] = path[i + 1][k];
+
                 for (int l = 0; l < C; l++)
                 {
-                    rgb[i][k][l] = rgb[i+1][k][l];
+                    rgb[i][k][l] = rgb[i + 1][k][l];
                 }
             }
         }
     }
-   
-    calc_energy(rgb, energy, H-1, W_, C);
-    
-    calc_path(path,energy, H-1, W_);
-    
-    reduce_H(energy,path,rgb, H-1, W_, H_ ,C);
-    
-    
+
+    calc_energy(rgb, energy, H - 1, W_, C);
+
+    calc_path(path, energy, H - 1, W_);
+
+    reduce_H(energy, path, rgb, H - 1, W_, H_, C);
 }
-
-
-
-
 
 void solve(int ***rgb, int H, int W, int C, int H_, int W_, int C_)
 {
@@ -395,12 +417,11 @@ void solve(int ***rgb, int H, int W, int C, int H_, int W_, int C_)
             }
         }
     }
-    
-    reduce_W(energy,path, rgb, H, W, W_, C);
-    calc_energy(rgb, energy, H, W_, C);
-    calc_path(path,energy, H, W_);
-    reduce_H(energy,path,rgb, H, W_, H_ ,C);
-    
+
+    reduce_W(energy, path, rgb, H, W, W_, C);
+    calc_energy(rgb, energy, H, W, C);
+    calc_path(path, energy, H, W);
+    reduce_H(energy, path, rgb, H, W, H_, C);
 }
 
 int main()
