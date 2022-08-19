@@ -3,12 +3,13 @@ using namespace std;
 
 #define max_int 10000
 
+template<class temp>
 class deque
 {
 private:
     int frnt;
     int rear;
-    int arr[max_int] = {};
+    temp arr[max_int] = {};
     int length;
 
 public:
@@ -18,7 +19,7 @@ public:
         rear = -1;
         length = 0;
     }
-    deque(int n, int s)
+    deque(int n, temp s)
     {
         frnt = 0;
         rear = n - 1;
@@ -29,26 +30,27 @@ public:
         length=n;
     }
 
-    void push_back(int);
+    void push_back(temp);
     void pop_back();
-    void push_front(int);
+    void push_front(temp);
     void pop_front();
     int front();
     int back();
-    int operator [](int);
+    int operator [](temp);
     //int D[n];
     bool empty();
     int size();
-    void resize(int, int);
+    void resize(int, temp);
     void clear();
 };
-
-int deque::size()
+template <class temp>
+int deque<temp>::size()
 {
     return length;
 }
 
-void deque::push_back(int n)
+template <class temp>
+void deque<temp>::push_back(temp n)
 {
     if (rear == max_int - 1)
     {
@@ -74,7 +76,9 @@ void deque::push_back(int n)
 
     length++;
 }
-void deque::push_front(int n)
+
+template <class temp>
+void deque<temp>::push_front(temp n)
 {
     if (frnt == 0)
     {
@@ -101,7 +105,8 @@ void deque::push_front(int n)
     length++;
 }
 
-bool deque::empty()
+template <class temp>
+bool deque<temp>::empty()
 {
 
     if (frnt == -1)
@@ -110,7 +115,8 @@ bool deque::empty()
         return false;
 }
 
-void deque::pop_back()
+template <class temp>
+void deque<temp>::pop_back()
 {
     if (empty())
         return;
@@ -129,7 +135,8 @@ void deque::pop_back()
     length--;
 }
 
-void deque::pop_front()
+template <class temp>
+void deque<temp>::pop_front()
 {
     if (empty())
         return;
@@ -152,7 +159,8 @@ void deque::pop_front()
     length--;
 }
 
-int deque::front()
+template <class temp>
+int deque<temp>::front()
 {
     if (empty())
         exit;
@@ -162,7 +170,8 @@ int deque::front()
     }
 }
 
-int deque::back()
+template <class temp>
+int deque<temp>::back()
 {
     if (empty())
         exit;
@@ -172,13 +181,15 @@ int deque::back()
     }
 }
 
-void deque::clear() {
+template <class temp>
+void deque<temp>::clear() {
     frnt=-1;
     rear=-1;
     length=0;
 }
 
-int deque::operator [](int n) {
+template <class temp>
+int deque<temp>::operator [](temp n) {
     if(n>length)
         exit;
     else if(n==1)
@@ -195,7 +206,8 @@ int deque::operator [](int n) {
     else    return arr[n+frnt-1];
 }
 
-void deque::resize(int x, int n){
+template <class temp>
+void deque<temp>::resize(int x, temp n){
     if(x==length)
     return;
     if(x>length)
