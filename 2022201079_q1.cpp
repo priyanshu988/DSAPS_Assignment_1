@@ -379,7 +379,7 @@ string arth_operation(string s)
 
 string exponentiation(string s1, string s2)
 {
-    int power = stoi(s2);
+    unsigned long long int power = stoi(s2);
     string s = multiplication(s1, s1);
     power -= 2;
     while (power--)

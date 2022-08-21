@@ -359,7 +359,7 @@ void reduce_H(int **energy, int **path, int ***rgb, int H, int W_, int H_, int C
         }
     }
 
-    calc_energy(rgb, energy, H - 1, W_, C);
+        calc_energy(rgb, energy, H - 1, W_, C);
 
     calc_path(path, energy, H - 1, W_);
 
