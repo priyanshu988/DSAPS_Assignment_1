@@ -2,7 +2,7 @@
 using namespace std;
 
 // #define max_int 10000
-long long int max_int = 100;
+long long int max_int = 10;
 
 template <class temp>
 class deque
@@ -16,7 +16,7 @@ class deque
 public:
     deque()
     {
-        arr = new int[max_int]{};
+        arr = new temp[max_int]{};
         frnt = -1;
         rear = -1;
         length = 0;
@@ -37,20 +37,20 @@ public:
         length = n;
     }
 
-    void push_back(temp); ///checked
-    void pop_back(); //checked
-    void push_front(temp);//checked
-    void pop_front();//checked
-    int front();//checked
-    int back();//checked
-    int operator[](int);//checked
-    
-    bool empty();//checked
-    bool full();//checked
-    int size();//checked
-    void resize(int, temp);//checked
-    void clear();//checked
-    void display();//checked
+    void push_back(temp);  /// checked
+    void pop_back();       // checked
+    void push_front(temp); // checked
+    void pop_front();      // checked
+    int front();           // checked
+    int back();            // checked
+    int operator[](int);   // checked
+
+    bool empty();           // checked
+    bool full();            // checked
+    int size();             // checked
+    void resize(int, temp); // checked
+    void clear();           // checked
+    void display();         // checked
 };
 // template <class temp>
 // void deque<temp>::update_array(temp *a, int m)
@@ -68,7 +68,7 @@ int deque<temp>::size()
 template <class temp>
 bool deque<temp>::full()
 {
-    if ((frnt == 0 && rear == length - 1) || frnt == rear + 1)
+    if ((frnt == 0 && rear == max_int - 1) || frnt == rear + 1)
         return true;
     else
         return false;
@@ -78,9 +78,52 @@ void deque<temp>::push_back(temp n)
 {
     if (full())
     {
-        exit;
+        temp *arr1;
+        int nmax_int = 2 * max_int;
+        
+        arr1 = new temp[nmax_int]{};
+        if (frnt <= rear)
+        {
+            int i = frnt;
+            while (i <= rear)
+            {
+                arr1[i] = arr[i];
+                cout<<arr1[i]<<endl;
+                i++;
+            }
+        }
+        else
+        {
+            int i = frnt;
+            frnt=0;
+            int j=0;
+            while (i > rear)
+            {
+                arr1[j] = arr[i];
+                //cout<<arr1[j]<<endl;
+                if (i != max_int - 1)
+                    i++;
+                else
+                    i = 0;
+                j++;
+            }
+            while (i <= rear)
+            {
+                arr1[j] = arr[i];
+                //cout<<arr1[j]<<endl;
+                i++;
+                j++;
+            }
+            rear=j;
+            arr1[rear] = n;
+
+        }
+        max_int = nmax_int;
+        delete[] arr;
+        arr=arr1;
+
     }
-    if (rear == -1)
+    else if (rear == -1)
     {
         // cout<<rear<<frnt<<endl;
         rear = 0;
@@ -141,10 +184,52 @@ void deque<temp>::push_front(temp n)
 {
     if (full())
     {
-        exit;
-    }
+        temp *arr1;
+        int nmax_int = 2 * max_int;
+        
+        arr1 = new temp[nmax_int]{};
+        if (frnt <= rear)
+        {
+            int i = frnt;
+            while (i <= rear)
+            {
+                arr1[i] = arr[i];
+                cout<<arr1[i]<<endl;
+                i++;
+            }
+        }
+        else
+        {
+            int i = frnt;
+            frnt=0;
+            int j=0;
+            while (i > rear)
+            {
+                arr1[j] = arr[i];
+                //cout<<arr1[j]<<endl;
+                if (i != max_int - 1)
+                    i++;
+                else
+                    i = 0;
+                j++;
+            }
+            while (i <= rear)
+            {
+                arr1[j] = arr[i];
+                //cout<<arr1[j]<<endl;
+                i++;
+                j++;
+            }
+            rear=j;
+            arr1[rear] = n;
 
-    if (frnt == -1)
+        }
+        max_int = nmax_int;
+        delete[] arr;
+        arr=arr1;
+
+    }
+    else if (frnt == -1)
     {
         frnt = rear = 0;
     }
@@ -246,7 +331,7 @@ void deque<temp>::clear()
 template <class temp>
 int deque<temp>::operator[](int n)
 {
-    if (n > length || n == 0 )
+    if (n > length || n == 0)
         return -1;
     else if (n == 1)
         return arr[frnt];
@@ -295,7 +380,8 @@ void deque<temp>::resize(int x, temp n)
             length++;
         }
     else
-    {    while (length != x)
+    {
+        while (length != x)
         {
             if (empty())
                 return;
@@ -318,10 +404,9 @@ void deque<temp>::resize(int x, temp n)
             int i = frnt;
             while (i <= rear)
             {
-                arr[i]=n;
+                arr[i] = n;
                 i++;
             }
-            
         }
         else
         {
@@ -329,7 +414,7 @@ void deque<temp>::resize(int x, temp n)
             while (i > rear)
             {
 
-                arr[i]=n;
+                arr[i] = n;
                 if (i != max_int - 1)
                     i++;
                 else
@@ -337,10 +422,9 @@ void deque<temp>::resize(int x, temp n)
             }
             while (i <= rear)
             {
-                arr[i]=n;
+                arr[i] = n;
                 i++;
             }
-            
         }
     }
 }
@@ -361,13 +445,18 @@ int main()
     int m = 1;
 
     dq.push_front(m);
-    dq.push_front(m + 1);
-    dq.push_front(m + 2);
-    
-    // dq.push_back(m);
-    // dq.push_back(m + 1);
-    // dq.push_back(m + 2);
-    
-    dq.clear();
+    dq.push_front(m);
+    dq.push_front(m);
+
+    dq.push_back(m);
+    dq.push_back(m + 1);
+    dq.push_back(m + 2);
+    dq.push_back(m);
+    dq.push_back(m + 1);
+    dq.push_back(m + 2);
+    dq.push_back(m);
+    dq.push_back(m + 1);
+    dq.push_back(m + 2);
+    cout<<dq.size()<<endl;
     dq.display();
 }
